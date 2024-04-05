@@ -1,0 +1,9 @@
+menu "WES additional"
+ 
+    config GPIO_LED
+         int "Select GPIO LED"
+         default 14
+         help
+             Enter GPIO for LED
+ 
+         endmenu
