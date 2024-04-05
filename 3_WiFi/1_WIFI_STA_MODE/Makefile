@@ -3,7 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := 1_first_code
+PROJECT_NAME := 1_wifi_sta_mode
 
 include $(IDF_PATH)/make/project.mk
-

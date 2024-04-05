@@ -1,13 +1,11 @@
 /**
-* @file app_main.c
-
-* @brief Wifi station mode example.
-
-* @par Wifi station mode example.
-*
-* COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
-* All rights reserved.
-*/
+ * @file app_main.c
+ *
+ * @brief WiFi station mode example.
+ *
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
+ * All rights reserved.
+ */
 
 //--------------------------------- INCLUDES ----------------------------------
 #include <esp_event.h>
@@ -24,6 +22,7 @@
 #define EXAMPLE_ESP_WIFI_PASS ("")
 
 #define DELAY_TIME_MS (5000U)
+
 //-------------------------------- DATA TYPES ---------------------------------
 
 //---------------------- PRIVATE FUNCTION PROTOTYPES --------------------------
@@ -51,9 +50,10 @@ static esp_err_t _wifi_init_sta(void);
  * nvs_flash_init().
  */
 static esp_err_t _nvs_init(void);
-//------------------------- STATIC DATA & CONSTANTS ---------------------------
 
+//------------------------- STATIC DATA & CONSTANTS ---------------------------
 static const char *TAG = "WIFI";
+
 //------------------------------- GLOBAL DATA ---------------------------------
 
 //------------------------------ PUBLIC FUNCTIONS -----------------------------
@@ -114,6 +114,7 @@ void app_main(void)
         vTaskDelay(DELAY_TIME_MS / portTICK_PERIOD_MS);
     }
 }
+
 //---------------------------- PRIVATE FUNCTIONS ------------------------------
 
 static esp_err_t _wifi_init_sta(void)
