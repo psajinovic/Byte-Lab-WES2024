@@ -1,27 +1,26 @@
 /**
-* @file app_main.c
-
-* @brief Code example for FreeRTOS threads.
-
-* @par Code example for FreeRTOS threads.
-*
-* COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
-* All rights reserved.
-*/
+ * @file app_main.c
+ *
+ * @brief Code example for FreeRTOS threads.
+ *
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
+ * All rights reserved.
+ */
 
 //--------------------------------- INCLUDES ----------------------------------
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdio.h>
-//---------------------------------- MACROS -----------------------------------
 
+//---------------------------------- MACROS -----------------------------------
 #define GPIO_LED_BLUE    (14U)
 #define GPIO_BIT_MASK(X) ((1ULL << (X)))
 
 #define DELAY_MAIN_TASK_TIME_MS  (2000U)
 #define DELAY_HELLO_TASK_TIME_MS (1000U)
 #define DELAY_WORLD_TASK_TIME_MS (1000U)
+
 //-------------------------------- DATA TYPES ---------------------------------
 
 //---------------------- PRIVATE FUNCTION PROTOTYPES --------------------------
@@ -42,16 +41,17 @@ static void _led_toggle(uint8_t pin);
 /**
  * @brief This function prints out "hello".
  *
- * @param [in] pvParameter This is the parameter that is passed to the task.
+ * @param [in] p_parameter This is the parameter that is passed to the task.
  */
-static void _hello_task(void *pvParameter);
+static void _hello_task(void *p_parameter);
 
 /**
  * @brief This function prints out "world!".
  *
- * @param [in] pvParameter This is the parameter that is passed to the task.
+ * @param [in] p_parameter This is the parameter that is passed to the task.
  */
-static void _world_task(void *pvParameter);
+static void _world_task(void *p_parameter);
+
 //------------------------- STATIC DATA & CONSTANTWS ---------------------------
 
 //------------------------------- GLOBAL DATA ---------------------------------
@@ -60,16 +60,19 @@ static void _world_task(void *pvParameter);
 void app_main(void)
 {
     _led_init(GPIO_LED_BLUE);
+
     xTaskCreate(&_hello_task, "hello_task", 2 * 1024, NULL, 5, NULL); /* All of these numbers should be MACROS or static const*/
     xTaskCreate(&_world_task, "world_task", 2 * 1024, NULL, 5, NULL);
+
     for(;;)
     {
         vTaskDelay(DELAY_MAIN_TASK_TIME_MS / portTICK_PERIOD_MS);
         _led_toggle(GPIO_LED_BLUE);
     }
 }
+
 //---------------------------- PRIVATE FUNCTIONS ------------------------------
-static void _hello_task(void *pvParameter)
+static void _hello_task(void *p_parameter)
 {
     for(;;)
     {
@@ -78,7 +81,7 @@ static void _hello_task(void *pvParameter)
     }
 }
 
-static void _world_task(void *pvParameter)
+static void _world_task(void *p_parameter)
 {
     for(;;)
     {
@@ -110,4 +113,5 @@ static void _led_toggle(uint8_t pin)
     static uint32_t cntr = 0;
     gpio_set_level(pin, ++cntr % 2);
 }
+
 //---------------------------- INTERRUPT HANDLERS ------------------------------
