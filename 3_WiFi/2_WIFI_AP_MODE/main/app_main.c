@@ -1,13 +1,11 @@
 /**
-* @file app_main.c
-
-* @brief Wifi access point example.
-
-* @par Wifi access point example.
-*
-* COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
-* All rights reserved.
-*/
+ * @file app_main.c
+ *
+ * @brief Wifi access point example.
+ *
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
+ * All rights reserved.
+ */
 
 //--------------------------------- INCLUDES ----------------------------------
 #include <string.h>
@@ -27,6 +25,7 @@
 #define EXAMPLE_ESP_WIFI_PASS    ("wes123456")
 #define EXAMPLE_ESP_WIFI_CHANNEL (1U)
 #define EXAMPLE_MAX_STA_CONN     (4U)
+
 //-------------------------------- DATA TYPES ---------------------------------
 
 //---------------------- PRIVATE FUNCTION PROTOTYPES --------------------------
@@ -54,9 +53,10 @@ static esp_err_t _wifi_init_softap(void);
  * nvs_flash_init().
  */
 static esp_err_t _nvs_init(void);
-//------------------------- STATIC DATA & CONSTANTS ---------------------------
 
+//------------------------- STATIC DATA & CONSTANTS ---------------------------
 static const char *TAG = "WIFI";
+
 //------------------------------- GLOBAL DATA ---------------------------------
 
 //------------------------------ PUBLIC FUNCTIONS -----------------------------
@@ -82,6 +82,7 @@ void app_main(void)
 
     vTaskSuspend(NULL);
 }
+
 //---------------------------- PRIVATE FUNCTIONS ------------------------------
 
 static esp_err_t _wifi_init_softap(void)
