@@ -1,13 +1,13 @@
 /**
-* @file app_main.c
-
-* @brief Code example for controlling LED BLUE on Byte Lab Dev Kit board.
-
-* @par Code example for controlling LED BLUE on Byte Lab Dev Kit board.
-*
-* COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
-* All rights reserved.
-*/
+ * @file app_main.c
+ *
+ * @brief Code example for controlling LED BLUE on Byte Lab Dev Kit board.
+ *
+ * @par Code example for controlling LED BLUE on Byte Lab Dev Kit board.
+ *
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
+ * All rights reserved.
+ */
 
 //--------------------------------- INCLUDES ----------------------------------
 #include "driver/gpio.h"
@@ -51,6 +51,7 @@ void app_main(void)
         _led_toggle(GPIO_LED_BLUE);
     }
 }
+
 //---------------------------- PRIVATE FUNCTIONS ------------------------------
 static void _led_init(uint8_t pin)
 {
