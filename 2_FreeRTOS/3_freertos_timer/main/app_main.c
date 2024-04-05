@@ -1,23 +1,22 @@
 /**
-* @file app_main.c
-
-* @brief Code example for FreeRTOS timers.
-
-* @par Code example for FreeRTOS timers.
-*
-* COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
-* All rights reserved.
-*/
+ * @file app_main.c
+ *
+ * @brief Code example for FreeRTOS timers.
+ *
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
+ * All rights reserved.
+ */
 
 //--------------------------------- INCLUDES ----------------------------------
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
 #include <stdio.h>
-//---------------------------------- MACROS -----------------------------------
 
+//---------------------------------- MACROS -----------------------------------
 #define GPIO_LED_BLUE    (14U)
 #define GPIO_BIT_MASK(X) ((1ULL << (X)))
+
 //-------------------------------- DATA TYPES ---------------------------------
 
 //---------------------- PRIVATE FUNCTION PROTOTYPES --------------------------
@@ -38,9 +37,10 @@ static void _led_toggle(uint8_t pin);
 /**
  * @brief This function is a callback for software timer, it toggles the LED.
  *
- * @param [in] tmr Timer handle for the timer that invoked the callback.
+ * @param [in] p_timer Timer handle for the timer that invoked the callback.
  */
-static void _led_timer_cb(TimerHandle_t tmr);
+static void _led_timer_cb(TimerHandle_t p_timer);
+
 //------------------------- STATIC DATA & CONSTANTS ---------------------------
 static TimerHandle_t p_led_timer_hndl = NULL;
 
@@ -58,6 +58,7 @@ void app_main(void)
 
     vTaskSuspend(NULL);
 }
+
 //---------------------------- PRIVATE FUNCTIONS ------------------------------
 
 static void _led_init(uint8_t pin)
@@ -84,9 +85,9 @@ static void _led_toggle(uint8_t pin)
     gpio_set_level(pin, ++cntr % 2);
 }
 //---------------------------- INTERRUPT HANDLERS ------------------------------
-static void _led_timer_cb(TimerHandle_t tmr)
+static void _led_timer_cb(TimerHandle_t p_timer)
 {
-   
     _led_toggle(GPIO_LED_BLUE);
+
     xTimerResetFromISR(p_led_timer_hndl, NULL);
 }
