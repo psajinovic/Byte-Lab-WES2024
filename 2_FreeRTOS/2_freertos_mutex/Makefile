@@ -3,7 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := 1_first_code
+PROJECT_NAME := 2_freertos_mutex
 
 include $(IDF_PATH)/make/project.mk
-
