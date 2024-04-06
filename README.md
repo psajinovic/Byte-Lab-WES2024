@@ -1,25 +1,40 @@
-# ESP32 Basics
+# WES 2024
 
 ## Content
 
-1. **GPIO**
-   Example of how to use GPIO on ESP32 by controlling the LED.
-3. **FreeRTOS: Thread**
-   FreeRTOS thread example.
-4. **FreeRTOS: Mutex**
-   Mutex usage example in FreeRTOS.
-5. **FreeRTOS: Software timer**
-   FreeRTOS timer example. 
-6. **WiFi**
-   SoftAp and Wifi station example. 
+1. **Basic Introductin**
+   Usage of GPIOs.
+2. **FreeRTOS**
+   Basic FreeRTOS concepts.
+3. **WiFi**
+   Connectivity.
+4. **GUI**
+   Graphical User Interface.
 
-## How to run each project?
-- Position yourself in the root of the project you want to run.
-- Set up required environmental variables using the `. $HOME/esp/esp-idf/export.sh` command. (You only have to run this once).
-- Run the `idf.py build` command to build the project.
-- Run the `idf.py flash -p /dev/ttyUSB0` command to flash the project. Make sure to use the appropriate USB path. <br  />:exclamation:  If the Byte Lab Development Kit is used, `TCH_IRQ switch` on the peripheral module must be `OFF`.
-- Run the `idf.py monitor /dev/ttyUSB0` command to monitor the programs output.
+## Requirements
+- ESP-IDF v5.0.x
+
+## Getting started with the repository
+- Clone the project with `git clone`.
+- Run `git submodule update --init --recursive` to update submodules (LVGL).
+- Before running the GUI examples, you must position yourself in the `components/lvgl_esp32_drivers` directory and run `git apply ../lvgl_esp32_drivers_8-3.patch`.
+- Before running the GUI examples, copy `sdkconfig.defaults` over `sdkconfig` (`cp sdkconfig.defaults sdkconfig`)
+
+
+## Building, flashing and monitoring
+- Set up required environmental variables. 
+   - Windows users: Open the ESP terminal and position yourself in the root of the example you want to run.
+   - Linux users: Position yourself in the root of the example you want to run and execute `. $HOME/esp/esp-idf/export.sh` command.
+- Build the project.
+   - Run the `idf.py build` command.
+- Flash the project.
+   - Windows users: Run the `idf.py -p COMx flash` command.
+   - Linux users: Run the `idf.py -p /dev/ttyUSBx flash` command.
+   - :exclamation:  If the Byte Lab Development Kit is used, `TCH_IRQ switch` on the peripheral module must be `OFF`.
+- Monitor the programs output:
+   - Windows users: Run the `idf.py -p COMx monitor` command.
+   - Linux users: Run the `idf.py -p /dev/ttyUSBx monitor` command.
 
 ## Configuration
 
-The project is configured for Byte Lab Development Kit. If you want to use it on a custom board, make sure to use the appropriate GPIO pin (for driving the LED) in **2_gpio** and **6_freertos_timer** projects.
+The project is configured for Byte Lab Development Kit. If you want to use it on a custom board, make sure to modify the appropriate GPIO pins.
