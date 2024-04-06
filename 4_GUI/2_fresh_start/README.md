@@ -1,9 +1,9 @@
 # LVGL project for ESP32
 
-This is an ESP32 demo project showcasing LVGL v8.3.* with support for several display controllers and touch controllers.
+This is an ESP32 demo project showcasing LVGL v8.3.x with support for several display controllers and touch controllers.
 
-- Version of ESP-IDF required 5.0. or greater
-- Version of LVGL used: 8.3.*
+- Version of ESP-IDF required 5.0.x
+- Version of LVGL used: 8.3.x
 
 
 ## Get started
@@ -22,18 +22,6 @@ This submodule we are using is an embedded graphics library used to create beaut
 This submodule enables us to use already implemented functions for displaying objects on different displays and receiving touch information (including our ILI9341 display and XPT2046 touch controller) on ESP32. In `gui.c` we pass those implemented functions as callbacks (for flushing the screen and reading touch input) to the LVGL library.
 
 Those two submodules together make lives easier for creating embedded graphics on ESP32.
-
-### Build and run the demo
-
-1. Clone this project and run `git submodule update --init --recursive`.
-1. Apply the patch for lvgl_esp32_drivers submodule to update it to LVGL 8.3. by positioning yourself in the components/lvgl_esp32_drivers directory and running `git apply ../lvgl_esp32_drivers_8-3.patch`.
-1. Configure the project:
-   - If you are using the Byte Lab Development Kit, copy `sdkconfig.defaults` over `sdkconfigs` (`cp sdkconfig.defaults sdkconfig`).
-   - If you are using custom board, configure the project by following the [Configuration](#configuration) section.
-1. Set up required environmental variables using the `. $HOME/esp/esp-idf/export.sh` command.
-1. Build the project with `idf.py build`.
-1. Flash the project with `idf.py flash /dev/ttyUSB0`. Make sure to use the appropriate USB path. <br  />:exclamation:  If the Byte Lab Development Kit is used, `TCH_IRQ switch` on the peripheral module must be `OFF`.
-1. Monitor the projects output with `idf.py monitor /dev/ttyUSB0`.
 
 ### Configuration
 

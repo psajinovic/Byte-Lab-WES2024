@@ -10,9 +10,9 @@ This project, created for ESP32, provides <b>three demo applications</b> for you
 
 ## Requirements
 
-- Version of ESP-IDF required 5.0. or greater
-- Version of LVGL used: 8.3.*
-- BLDK
+- Version of ESP-IDF required: 5.0.x
+- Version of LVGL used: 8.3.x
+- Byte Lab Development Kit
 
 ## How to choose an application
 
@@ -26,7 +26,7 @@ It can also be changed by modifying the `sdkconfig` file and changing the approp
 
 SquareLine example is a showcase application used to show that it is possible to create GUI applications easily using the SquareLine Studio application. All of the designing can be done within the SquareLine Studio.
 
-### BL gui
+### BL GUI
 
 Simple application used to show how you can create sliders, buttons and screen using no GUI applications like SquareLine studio. Instead, all of it is created only by writing C code.
 
