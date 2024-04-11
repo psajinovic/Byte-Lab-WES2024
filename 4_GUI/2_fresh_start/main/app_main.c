@@ -1,14 +1,14 @@
 /**
  * @file main.c
  *
- * @brief
+ * @brief Main.
  *
- * COPYRIGHT NOTICE: (c) 2022 Byte Lab Grupa d.o.o.
+ * COPYRIGHT NOTICE: (c) 2024 Byte Lab Grupa d.o.o.
  * All rights reserved.
  */
 
 //--------------------------------- INCLUDES ----------------------------------
-#include "gui/gui.h"
+#include "gui.h"
 
 //---------------------------------- MACROS -----------------------------------
 
