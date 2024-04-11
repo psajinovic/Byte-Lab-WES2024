@@ -10,3 +10,9 @@
 [submodule "4_GUI/2_fresh_start/components/lvgl"]
 	path = 4_GUI/2_fresh_start/components/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "4_GUI/3_fresh_start_expanded/components/lvgl_esp32_drivers"]
+	path = 4_GUI/3_fresh_start_expanded/components/lvgl_esp32_drivers
+	url = https://github.com/lvgl/lvgl_esp32_drivers.git
+[submodule "4_GUI/3_fresh_start_expanded/components/lvgl"]
+	path = 4_GUI/3_fresh_start_expanded/components/lvgl
+	url = https://github.com/lvgl/lvgl.git
