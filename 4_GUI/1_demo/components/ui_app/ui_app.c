@@ -11,7 +11,7 @@
 #include "ui_app.h"
 #include "bl_gui/bl_gui.h"
 #include "lvgl_demo/lvgl_demo.h"
-#include "squareline/ui.h"
+#include "squareline/project/ui.h"
 
 #include <stdio.h>
 //---------------------------------- MACROS -----------------------------------
