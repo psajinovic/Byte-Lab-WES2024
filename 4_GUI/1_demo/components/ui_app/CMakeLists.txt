@@ -1,16 +1,26 @@
-set(COMPONENT_SRCS "ui_app.c" "bl_gui/bl_gui.c" "lvgl_demo/lvgl_demo.c" 
-                    "squareline/project/ui.c" 
-                    "squareline/project/images/ui_img_bl_logo_symbol_png.c"
-                    "squareline/project/images/ui_img_colorwheel_icon_png.c"
-                    "squareline/project/images/ui_img_settings_icon_png.c"
-                    "squareline/project/images/ui_img_home_icon_png.c"
-                    "squareline/project/ui_helpers.c"
-                    "squareline/project/ui_events.c"
-                    "squareline/project/screens/ui_Home_Scr.c"
-                    "squareline/project/screens/ui_Color_Scr.c"
-                    "squareline/project/screens/ui_Settings_Scr.c")
+set(SQUARELINE_DIR ${CMAKE_CURRENT_LIST_DIR}/squareline/project)
+file(GLOB_RECURSE SQUARELINE_SRCS
+    "${SQUARELINE_DIR}/*.c"
+)
 
-set(COMPONENT_ADD_INCLUDEDIRS "")
+set(COMPONENT_SRCS 
+    "ui_app.c"
+    "bl_gui/bl_gui.c"
+    "lvgl_demo/lvgl_demo.c"
+    ${SQUARELINE_SRCS}
+)
+
+file(GLOB_RECURSE SQUARELINE_INCLUDES
+    "${SQUARELINE_DIR}/*.h"
+)
+
+foreach(_hdr ${SQUARELINE_INCLUDES})
+    get_filename_component(_dir ${_hdr} DIRECTORY)
+    list(APPEND COMPONENT_ADD_INCLUDEDIRS ${_dir})
+endforeach()
+
+list(REMOVE_DUPLICATES COMPONENT_ADD_INCLUDEDIRS)
+
 set(COMPONENT_PRIV_REQUIRES lvgl lvgl_esp32_drivers)
 
 register_component()
