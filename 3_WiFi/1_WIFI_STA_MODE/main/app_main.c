@@ -18,99 +18,58 @@
 #include <stdio.h>
 
 //---------------------------------- MACROS -----------------------------------
-#define EXAMPLE_ESP_WIFI_SSID ("")
-#define EXAMPLE_ESP_WIFI_PASS ("")
-
-#define DELAY_TIME_MS (5000U)
-
-//-------------------------------- DATA TYPES ---------------------------------
+#define EXAMPLE_ESP_WIFI_SSID (" ")
+#define EXAMPLE_ESP_WIFI_PASS (" ")
+#define DELAY_TIME_MS         (10000U)
 
 //---------------------- PRIVATE FUNCTION PROTOTYPES --------------------------
+
 /**
- * @brief It's a callback function that is called when an event occurs.
+ * @brief Wi-Fi and IP event handler.
  *
- * @param [in] p_arg This is a pointer to the argument passed to the event handler.
- * @param [in] event_base The event base that the event is associated with.
- * @param [in] event_id The event ID.
- * @param [in] p_event_data This is the data that is passed to the event handler.
+ * @param[in] p_arg         User data (unused).
+ * @param[in] event_base    Base ID of the event.
+ * @param[in] event_id      Event identifier.
+ * @param[in] p_event_data  Data passed with the event.
  */
 static void _event_handler(void *p_arg, esp_event_base_t event_base, int32_t event_id, void *p_event_data);
 
 /**
- * @brief It sets up the ESP32 as a station.
+ * @brief Initializes ESP32 as Wi-Fi station.
  *
- * @return The error code of the last function call.
+ * @return esp_err_t
  */
 static esp_err_t _wifi_init_sta(void);
 
 /**
- * @brief If the NVS partition is not initialized, initialize it.
+ * @brief Initializes NVS if needed.
  *
- * @return The return value is the bitwise OR of the return values of nvs_flash_erase() and
- * nvs_flash_init().
+ * @return esp_err_t
  */
 static esp_err_t _nvs_init(void);
 
 //------------------------- STATIC DATA & CONSTANTS ---------------------------
 static const char *TAG = "WIFI";
 
-//------------------------------- GLOBAL DATA ---------------------------------
-
 //------------------------------ PUBLIC FUNCTIONS -----------------------------
 
 void app_main(void)
 {
-    esp_err_t err = ESP_OK;
-
-    /* Initialize NVS partition */
-    err = _nvs_init();
-
-    if(ESP_OK == err)
+    if (_nvs_init() != ESP_OK ||
+        esp_netif_init() != ESP_OK ||
+        esp_event_loop_create_default() != ESP_OK ||
+        esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &_event_handler, NULL) != ESP_OK ||
+        esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &_event_handler, NULL) != ESP_OK ||
+        _wifi_init_sta() != ESP_OK)
     {
-        /* Initialize TCP/IP */
-        ESP_LOGI(TAG, " Initialize TCP/IP");
-        err = esp_netif_init();
+        ESP_LOGE(TAG, "Wi-Fi initialization failed");
+        return;
     }
 
-    if(ESP_OK == err)
-    {
-        /* Initialize the event loop */
-        ESP_LOGI(TAG, " Initialize the event loop");
-        err = esp_event_loop_create_default();
-    }
-
-    if(ESP_OK == err)
-    {
-        /* Register our event handler for Wi-Fi and IP and related events */
-        ESP_LOGI(TAG, " Register our event handler for Wi-Fi");
-        err = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &_event_handler, NULL);
-    }
-
-    if(ESP_OK == err)
-    {
-        /* Register our event handler for Wi-Fi and IP and related events */
-        ESP_LOGI(TAG, " Register our event handler for IP and related events");
-        err = esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &_event_handler, NULL);
-    }
-
-    if(ESP_OK == err)
-    {
-        /* Start the station */
-        ESP_LOGI(TAG, " Start the station");
-        err = _wifi_init_sta();
-    }
-
-    if(ESP_OK != err)
-    {
-        ESP_LOGE(TAG, "Init failed");
-    }
-
-    /* Do something */
     int index = 0;
-    for(;;)
+    while (true)
     {
-        printf("[%d] WiFi Example!\n", index);
-        index++;
+        printf("[%d] WiFi Example Running...\n", index++);
         vTaskDelay(DELAY_TIME_MS / portTICK_PERIOD_MS);
     }
 }
@@ -119,59 +78,43 @@ void app_main(void)
 
 static esp_err_t _wifi_init_sta(void)
 {
-    esp_err_t err = ESP_OK;
+    esp_netif_create_default_wifi_sta();
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-    err = esp_wifi_init(&cfg);
+    ESP_LOGI(TAG, "Set Wi-Fi storage to RAM");
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
 
-    if(ESP_OK == err)
-    {
-        ESP_LOGI(TAG, "Set wifi credentials storage: RAM");
-        err = esp_wifi_set_storage(WIFI_STORAGE_RAM);
-    }
+    ESP_LOGI(TAG, "Set Wi-Fi mode to STA");
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
 
-    if(ESP_OK == err)
-    {
-        ESP_LOGI(TAG, "Set wifi mode: STATION");
-        err = esp_wifi_set_mode(WIFI_MODE_STA);
-    }
-
-    wifi_config_t wifi_config = 
-    {
-      .sta =
-          {
-              .ssid = EXAMPLE_ESP_WIFI_SSID,
-              .password = EXAMPLE_ESP_WIFI_PASS,
-          },
+    wifi_config_t wifi_config = {
+        .sta = {
+            .ssid = EXAMPLE_ESP_WIFI_SSID,
+            .password = EXAMPLE_ESP_WIFI_PASS,
+            .threshold.authmode = WIFI_AUTH_OPEN,            
+            .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,                
+        },
     };
 
-    if(ESP_OK == err)
-    {
-        ESP_LOGI(TAG, "Configure wifi");
-        err = esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
-    }
+    ESP_LOGI(TAG, "Set Wi-Fi configuration");
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
 
-    if(ESP_OK == err)
-    {
-        err = esp_wifi_start();
-        ESP_LOGI(TAG, "Try to connect to AP with SSID:%s PSWD:%s", EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
-    }
+    ESP_LOGI(TAG, "Starting Wi-Fi");
+    ESP_ERROR_CHECK(esp_wifi_start());
 
-    return err;
+    ESP_LOGI(TAG, "Connecting to AP: %s", EXAMPLE_ESP_WIFI_SSID);
+    return ESP_OK;
 }
 
 static esp_err_t _nvs_init(void)
 {
     esp_err_t ret = nvs_flash_init();
-    if((ESP_ERR_NVS_NO_FREE_PAGES == ret) || (ESP_ERR_NVS_NEW_VERSION_FOUND == ret))
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
-        /* NVS partition was truncated
-         * and needs to be erased */
-        ret = nvs_flash_erase();
-
-        /* Retry nvs_flash_init */
-        ret |= nvs_flash_init();
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
     }
     return ret;
 }
@@ -180,20 +123,19 @@ static esp_err_t _nvs_init(void)
 
 static void _event_handler(void *p_arg, esp_event_base_t event_base, int32_t event_id, void *p_event_data)
 {
-    if((WIFI_EVENT == event_base) && (WIFI_EVENT_STA_START == event_id))
+    if ((WIFI_EVENT == event_base) && (WIFI_EVENT_STA_START == event_id))
     {
-        ESP_LOGI(TAG, "Try to connect.");
+        ESP_LOGI(TAG, "Wi-Fi STA started, connecting...");
         esp_wifi_connect();
     }
-    else if((IP_EVENT == event_base) && (IP_EVENT_STA_GOT_IP == event_id))
+    else if ((WIFI_EVENT == event_base) && (WIFI_EVENT_STA_DISCONNECTED == event_id))
     {
-        ip_event_got_ip_t *p_event = (ip_event_got_ip_t *)p_event_data;
-        ESP_LOGI(TAG, "CONNECTED with IP Address:" IPSTR, IP2STR(&p_event->ip_info.ip));
-        /* Signal main application to continue execution */
-    }
-    else if((WIFI_EVENT == event_base) && (WIFI_EVENT_STA_DISCONNECTED == event_id))
-    {
-        ESP_LOGI(TAG, "DISCONNECTED. \nReconnecting to the AP again...");
+        ESP_LOGW(TAG, "Wi-Fi disconnected, retrying...");
         esp_wifi_connect();
+    }
+    else if ((IP_EVENT == event_base) && (IP_EVENT_STA_GOT_IP == event_id))
+    {
+        ip_event_got_ip_t *event = (ip_event_got_ip_t *)p_event_data;
+        ESP_LOGI(TAG, "Got IP: " IPSTR, IP2STR(&event->ip_info.ip));
     }
 }
